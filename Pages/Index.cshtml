@@ -1,0 +1,62 @@
+﻿@page
+@using System.Net
+@model IndexModel
+@functions {
+    private string GetIPv4Address()
+    {
+        IPAddress remoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress;
+
+        if (remoteIpAddress != null)
+        {
+            return remoteIpAddress.MapToIPv4().ToString();
+        }
+        return "IPv4 address could not be found";
+    }
+
+    private string GetIPv6Address()
+    {
+        IPAddress remoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress;
+
+        if (remoteIpAddress != null)
+        {
+            return remoteIpAddress.MapToIPv6().ToString();
+        }
+        return "IPv6 address could not be found";
+    }
+}
+
+<div id="welcome">
+
+    <h3 style="text-align:center">Networking Web App</h3>
+
+    <br />
+
+    <p>
+        This is a test website for an assortment of simple networking applications and utilities I implemented as an effort to learn Razor page coding and networking principles.
+        Included in this web app are pages for:
+    </p>
+
+    <ul>
+        <li> <a href="/FtpServerClient">File Transfer Protocol (FTP) App</a>    </li>
+        <li> <a href="/IpAddressFromDomainName">Find IP Address From Domain Name</a>    </li>
+        <li> <a href="/IpAddressGeoLocation">IP Address Geolocation Lookup</a>    </li>
+        <li> <a href="/Ping">Ping</a>    </li>
+        <li> <a href="/WhoIs">WhoIs Lookup</a>    </li>
+        <li> <a href="/WifiScan">Wifi Scan</a>    </li>
+    </ul>
+
+    <p>All source code can be found on <a href="https://github.com/ConkyTheGreat/NetworkingApp">GitHub</a>. </p>
+
+    <p>Below is a listing of the server time, as well as your logged IP addresses.</p>
+
+    <br />
+
+</div>
+
+
+<div>
+    <p>Server time is: <b>@DateTime.Now</b> (EST) </p>
+    <p>Your IPv4 address is: <b>@GetIPv4Address()</b> </p>
+    <p>Your IPv6 address is: <b>@GetIPv6Address()</b> </p>
+    <br />
+</div>

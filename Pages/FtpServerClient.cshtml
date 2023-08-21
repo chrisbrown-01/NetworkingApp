@@ -1,0 +1,166 @@
+﻿@page
+@model NetworkingApp.Pages.FtpServerClientModel
+@{
+}
+
+@section Scripts
+{
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<script type="text/javascript">
+    var togglePassword = document.querySelector('#togglePassword');
+    var password = document.querySelector('#FtpLoginPassword');
+    togglePassword.addEventListener('click', function (e) {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+    });
+</script>
+}
+
+<h3 style="text-align:center">FTP Server - Connect, View, Upload and Download Files</h3>
+
+<br />
+
+<p>
+    Connect to an FTP server to view, download, upload and delete files. Only indexes files, not directories/folders.
+    An example <a href="https://dlptest.com/ftp-test/">test server</a> with login details is:
+</p>
+
+<li>FTP Site: <i>ftp://ftp.dlptest.com</i> </li>
+<li>Login Username: <i>dlpuser</i> </li>
+<li>Login Password: <i>rNrKYTX9g7z3RgJRmxWuGHbeu</i> </li>
+<br />
+
+<form asp-page-handler="Login" method="post">
+
+    <div class="form-group row">
+        <div class="col-md-2">
+            <label>FTP Site:</label>
+        </div>
+
+        <div class="col-md-10">
+            <input asp-for="FtpHostSite" type="text" class="form-control" placeholder="ftp://ftp.dlptest.com" required />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-2">
+            <label>FTP Login Username:</label>
+        </div>
+
+        <div class="col-md-10">
+            <input asp-for="FtpLoginUsername" type="text" class="form-control" placeholder="dlpuser" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-2">
+            <label>FTP Login Password:</label>
+        </div>
+
+        <div class="col-md-10 input-group">
+
+            <input asp-for="FtpLoginPassword" id="FtpLoginPassword" type="password" class="form-control" />
+
+            <div class="input-group-append">
+                <button id="togglePassword" class="btn btn-primary" type="button">
+                    <span class="fa fa-eye-slash icon"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <input type="submit" class="btn btn-primary" value="Connect" />
+    </div>
+
+    <br />
+</form>
+
+<div class="text-center">
+    <form asp-page-handler="RefreshFileDirectory" method="post">
+        <input type="submit" class="btn btn-info" value="Refresh File Directory" />
+    </form>
+    <br />
+</div>
+
+<div style="text-align:center">
+    <form enctype="multipart/form-data" method="post">
+        <div class="form-group">
+            <label class="file">
+                <input type="file" asp-for="FormFile">
+                <span class="file-custom"></span>
+            </label>
+            <input asp-page-handler="UploadFile" class="btn btn-outline-secondary" type="submit" value="Upload">
+        </div>
+    </form>
+</div>
+
+@if (TempData.ContainsKey("ExceptionMessage"))
+{
+    <p style="text-align:center"><b>ERROR - EXCEPTION HANDLED: @TempData["ExceptionMessage"]</b></p>
+    <br />
+}
+
+@if (Model.FtpServerFileListing != null)
+{
+    <table class="table table-bordered table-striped">
+
+        <thead>
+            <tr>
+                <th class="text-center">
+                    File Name
+                </th>
+
+                <th class="text-center">
+                    File Permissions
+                </th>
+
+                <th class="text-center">
+                    File Size (bytes)
+                </th>
+
+                <th class="text-center">
+                    File Actions
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var file in Model.FtpServerFileListing)
+            {
+                @if (file.Type.ToString() == "File")
+                {
+                    <tr>
+
+                        <td width="50%">@file.Name</td>
+                        <td width="15%">@file.RawPermissions</td>
+                        <td width="15%">@file.Size</td>
+                        <td width="20%" class="text-center">
+                            <div class="w-100 btn-group" role="group">
+                                <form asp-page-handler="DownloadFile" asp-route-fileName=@file.Name method="post">
+                                    <input type="submit" class="btn btn-success mx-1" value="Download" />
+                                </form>
+                                <form asp-page-handler="DeleteFile" asp-route-fileName=@file.Name method="post">
+                                    <input type="submit" class="btn btn-danger mx-1" value="Delete" />
+                                </form>
+                            </div>
+                        </td>
+
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+
+
+
+
+
+
+
+
+
+

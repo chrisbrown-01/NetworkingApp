@@ -1,0 +1,55 @@
+﻿@page
+@model NetworkingApp.Pages.WhoIsModel
+@{
+}
+
+<h3 style="text-align:center">WhoIs Lookup</h3>
+
+<br />
+
+<p>
+    Perform a WhoIs query to search who owns a domain, as well as their contact and hosting information. 
+    See more info on <a href="https://en.wikipedia.org/wiki/WHOIS"> Wikipedia</a>.
+</p>
+
+<br />
+
+<form method="post">
+
+    <div class="form-group row">
+
+        <div class="col-md-2">
+            <label>Search Domain:</label>
+        </div>
+
+        <div class="col-md-10 input-group">
+            <input asp-for="DomainNameForQuery" type="text" class="form-control" placeholder="'google.com' or '69.63.176.13'" />
+            <div class="input-group-append">
+                <input class="btn btn-primary" type="submit" value="Search">
+            </div>
+        </div>
+
+    </div>
+
+    <br />
+
+    <p>Note: WhoIs searches usually require a few seconds to complete. Please be patient.</p>
+
+</form>
+
+@if (Model.QueryResult != null)
+{
+    <h4 style="text-align:center">WhoIs Response</h4>
+    <br />
+
+    <p style="white-space:pre-line">@Model.QueryResult.Raw</p>
+    <br />
+
+    <h4 style="text-align:center">WhoIs Response Servers</h4>
+    <br />
+
+    @foreach (var server in Model.QueryResult.RespondedServers)
+    {
+        <li>@server</li>
+    }
+}

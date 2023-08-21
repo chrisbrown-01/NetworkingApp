@@ -1,0 +1,77 @@
+﻿@page
+@model NetworkingApp.Pages.IpAddressGeoLocationModel
+@{
+    string googleMapsQuery = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBYRDN_JrdnMUqCBbHlgX5Uw6FmUCZxZJs&q=Space+Needle,Seattle+WA";
+}
+
+<h3 style="text-align:center">Determine Geolocation by IP Address</h3>
+
+<br />
+
+<p>
+    Enter an IP address and see where it is located in the world.
+    Uses the <a href="https://ip-api.com/docs/api:json">ip-api.com</a> API to obtain results, then displays the geolocation using Google Maps.
+</p>
+
+<br />
+
+<form method="post">
+
+    <div class="form-group row">
+
+        <div class="col-md-2">
+            <label>IP Address:</label>
+        </div>
+
+        <div class="col-md-10 input-group">
+            <input asp-for="IpAddress" type="text" class="form-control" placeholder="Example: 69.63.176.13 or 2607:f8b0:400b:804::2004" />
+            <div class="input-group-append">
+                <input class="btn btn-primary" type="submit" value="Search">
+            </div>
+        </div>
+    </div>
+</form>
+
+@if (Model.ApiResults.status.ToLower() == "success")
+{
+    <div class="container-fluid">
+
+        <div class="row">
+
+            <div class="col">
+                <p style="white-space: pre-line">
+                    Queried IP Address: <b>@Model.ApiResults.query</b>
+                    City: <b>@Model.ApiResults.city</b>
+                    Region: <b>@Model.ApiResults.regionName</b>
+                    Country: <b>@Model.ApiResults.country</b>
+                    ISP: <b>@Model.ApiResults.isp</b>
+                    Organization: <b>@Model.ApiResults.org</b>
+                    Timezone: <b>@Model.ApiResults.timezone</b>
+                    Latitude: <b>@Model.ApiResults.lat</b>
+                    Longitude: <b>@Model.ApiResults.lon</b>
+                </p>
+            </div>
+
+            <div class="col">
+                <iframe width="600"
+                    height="450"
+                    style="border:0"
+                    loading="lazy"
+                    allowfullscreen
+                    referrerpolicy="no-referrer-when-downgrade"
+                    src=@Model.ApiResults.GoogleMapsApiQuery>
+                </iframe>
+            </div>
+
+        </div>
+
+    </div>
+}
+
+@if (Model.ApiResults.status.ToLower() == "fail")
+{
+    <p style="white-space: pre-line">
+        Queried IP Address: <b>@Model.ApiResults.query</b>
+        Reason For Failure: <b>@Model.ApiResults.message</b>
+    </p>
+}

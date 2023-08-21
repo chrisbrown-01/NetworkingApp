@@ -1,0 +1,53 @@
+﻿@page
+@model NetworkingApp.Pages.IpAddressFromDomainNameModel
+@{
+}
+
+<h3 style="text-align:center">Retrieve IP Address From Domain Name</h3>
+
+<br />
+
+<p>
+    Determine the IP address of a specific host by searching via DNS. Read more <a href="https://www.catchpoint.com/blog/domain-name-to-ip-address">here</a>.
+</p>
+
+<br />
+
+<form method="post">
+
+    <div class="form-group row">
+
+        <div class="col-md-2">
+            <label>Search Domain:</label>
+        </div>
+
+        <div class="col-md-10 input-group">
+            <input asp-for="DomainNameForIpAddressSearch" type="text" class="form-control" placeholder="www.google.com" />
+            <div class="input-group-append">
+                <input class="btn btn-primary" type="submit" value="Search">
+            </div>
+        </div>
+
+    </div>
+
+    <br />
+
+</form>
+
+@if (Model.Host != null)
+{
+    <h4 style="text-align:center">DNS Host Name</h4>
+    <br />
+
+    <p> <b>@Model.Host.HostName</b> </p>
+    <br />
+
+    <h4 style="text-align:center">Host IP Addresses</h4>
+    <br />
+
+    @foreach (var address in Model.Host.AddressList)
+    {
+        <li> <b>@address</b> </li>
+    }
+
+}

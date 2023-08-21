@@ -1,0 +1,40 @@
+﻿@page
+@model NetworkingApp.Pages.WifiScanModel
+@{
+
+}
+
+<h3 style="text-align:center">Nearby WiFi Access Points</h3>
+
+<br />
+
+<p>
+    Display all available WiFi access points detected by the computer hosting this web app.
+    Note that you must open the WiFI network selection tab to force Windows to refresh this list and show all AP's.
+</p>
+
+<form method="post">
+    <div class="text-center">
+        <input class="btn btn-primary btn-lg" type="submit" value="Scan for WiFi Access Points">
+        <br />
+    </div>
+    <br />
+</form>
+
+
+@if (Model.WifiAdapters != null)
+{
+    @foreach (var adapter in Model.WifiAdapters)
+    {
+        foreach (var network in adapter.NetworkReport.AvailableNetworks)
+        {
+            <p style="white-space: pre-line">Network SSID/Name: <b>@network.Ssid</b> 
+                Network MAC Address: <b>@network.Bssid</b> 
+                Network Signal Strength (dBm): <b>@network.NetworkRssiInDecibelMilliwatts</b> 
+                Network Security Authentication Type: <b>@network.SecuritySettings.NetworkAuthenticationType</b> 
+                Network Security Encryption Type: <b>@network.SecuritySettings.NetworkEncryptionType</b> 
+                Network Uptime (dd:hh:mm:ss): <b>@network.Uptime.ToString(@"dd\:hh\:mm\:ss")</b>
+                Network Channel Center Frequency (kHz): <b>@network.ChannelCenterFrequencyInKilohertz</b></p>
+        }
+    }
+}

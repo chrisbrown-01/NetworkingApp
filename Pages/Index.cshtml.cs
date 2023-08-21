@@ -1,0 +1,86 @@
+﻿using FluentFTP;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Whois.NET;
+using Windows.Devices.WiFi;
+
+// outgoing IP address: 99.226.185.177
+// google = 142.251.41.36
+// facebook = 31.13.80.36
+// wikipedia = 208.80.154.224
+
+namespace NetworkingApp.Pages
+{
+    public class IndexModel : PageModel
+    {
+        public PageResult OnGet()
+        {
+            return Page();
+        }
+
+        public async Task FluentFtpTestAsync()
+        {
+            string host = "ftp://ftp.dlptest.com/";
+            string user = "dlpuser";
+            string password = "rNrKYTX9g7z3RgJRmxWuGHbeu"; // Public password provided by the website
+
+            using (var conn = new FtpClient(host, user, password))
+            {
+                await conn.ConnectAsync();
+
+                var listing = await conn.GetListingAsync();
+
+                conn.RetryAttempts = 3;
+
+                await conn.UploadFileAsync(@"C:\Users\chris\Downloads\cbtest.txt", @"cbtest.txt", FtpRemoteExists.Overwrite, false, FtpVerify.Retry);
+
+                if (await conn.FileExistsAsync("cbtest.txt"))
+                {
+                    await conn.DownloadFileAsync(@"C:\Users\chris\Downloads\cbtest.txt", "cbtest.txt", FtpLocalExists.Overwrite, FtpVerify.Retry);
+                }
+            }
+        }
+
+        /*
+         
+        // Legacy/deprecated method of FTP connections
+        public void FtpTest()
+        {
+            //string uri = "ftp://192.168.0.21";
+
+            string uri = "ftp://ftp.dlptest.com/";
+
+            FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(uri);
+            ftpRequest.Credentials = new NetworkCredential("dlpuser", "rNrKYTX9g7z3RgJRmxWuGHbeu");
+            ftpRequest.Method = WebRequestMethods.Ftp.ListDirectory;
+
+            using FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse();
+            using var streamReader = new StreamReader(response.GetResponseStream());
+
+            var content = new List<string>();
+
+            string line = streamReader.ReadLine();
+            while (!string.IsNullOrEmpty(line))
+            {
+                content.Add(line);
+                line = streamReader.ReadLine();
+            }
+        }
+
+        */
+    }
+}
+

@@ -1,0 +1,48 @@
+﻿@page
+@model NetworkingApp.Pages.PingModel
+@{
+}
+
+<h3 style="text-align:center">Ping a Host Name or IP Address</h3>
+
+<br />
+
+<p>
+    Ping a host name or specific IP address. Useful for troubleshooting networking and DNS issues.
+    See more info on <a href="https://en.wikipedia.org/wiki/Ping_(networking_utility)"> Wikipedia</a>.
+</p>
+
+<br />
+
+
+<form method="post">
+
+    <div class="form-group row">
+
+        <div class="col-md-3">
+            <label>Host/IP Address To Ping:</label>
+        </div>
+
+        <div class="col-md-9 input-group">
+            <input asp-for="HostNameOrAddress" type="text" class="form-control" placeholder="'google.com' or '69.63.176.13'" />
+            <div class="input-group-append">
+                <input class="btn btn-primary" type="submit" value="Search">
+            </div>
+        </div>
+
+    </div>
+
+    <br />
+</form>
+
+@if (Model.PostRequestReceived)
+{
+    <h4 style="text-align:center">Ping Response</h4>
+    <br />
+
+    <p>Ping Status: <b>@Model.PingReplyStatus</b> </p>
+    <p>Ping Response IP Address: <b>@Model.PingReplyAddress</b> </p>
+    <p>Ping Response Round Trip Time (ms): <b>@Model.PingReplyRoundTripTime</b> </p>
+}
+
+
