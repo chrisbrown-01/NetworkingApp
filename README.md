@@ -1,4 +1,4 @@
-# RazorNetworkingApp
+# Razor-Networking-App
 
 This is an ASP.NET Core Razor pages web app with basic networking features I created when I was first learning Razor pages. This app is not meant for production release and has a lot of beginner coding patterns. 
 
